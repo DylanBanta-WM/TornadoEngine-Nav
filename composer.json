@@ -15,12 +15,12 @@
     "extra": {
         "tornado": {
             "name": "Nav",
-            "core": "^0.1",
+            "core": ">=0.2",
             "core-module": true,
             "provider": "TornadoEngine\\Nav\\NavServiceProvider"
         },
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     }
 }

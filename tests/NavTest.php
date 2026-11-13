@@ -49,6 +49,15 @@ class NavTest extends TestCase
         $this->assertNotContains('Reports', array_map(fn ($item) => $item->label, app(Nav::class)->for($staff)));
     }
 
+    public function test_administration_is_only_in_admins_menus(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $staff = User::factory()->create();
+
+        $this->assertContains('Administration', array_map(fn ($item) => $item->label, app(Nav::class)->for($admin)));
+        $this->assertNotContains('Administration', array_map(fn ($item) => $item->label, app(Nav::class)->for($staff)));
+    }
+
     public function test_items_for_missing_routes_are_left_out(): void
     {
         app(Nav::class)->add('Gone', 'no.such.route');
