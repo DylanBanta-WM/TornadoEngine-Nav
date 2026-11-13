@@ -1,0 +1,26 @@
+{
+    "name": "tornado-engine/nav",
+    "description": "Tornado Engine core-module: the site's navigation menu. Other modules add their items to it.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "illuminate/support": "^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TornadoEngine\\Nav\\": "src/"
+        }
+    },
+    "extra": {
+        "tornado": {
+            "name": "Nav",
+            "core": "^0.1",
+            "core-module": true,
+            "provider": "TornadoEngine\\Nav\\NavServiceProvider"
+        },
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

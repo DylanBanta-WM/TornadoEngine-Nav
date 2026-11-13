@@ -1,0 +1,87 @@
+@php
+    $user = Auth::user();
+    $items = app(\TornadoEngine\Nav\Nav::class)->for($user);
+@endphp
+
+<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <a href="{{ route('dashboard') }}" class="shrink-0 flex items-center text-sm font-semibold uppercase tracking-widest text-gray-800 dark:text-gray-200">
+                    {{ config('app.name') }}
+                </a>
+
+                {{-- Top bar, from tablet width up --}}
+                <div class="hidden space-x-8 md:-my-px md:ms-10 md:flex">
+                    @foreach ($items as $item)
+                        <x-nav-link :href="route($item->route)" :active="request()->routeIs($item->active)">
+                            {{ $item->label }}
+                        </x-nav-link>
+                    @endforeach
+                </div>
+            </div>
+
+            @if ($user)
+                <div class="hidden md:flex md:items-center md:ms-6">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                <div>{{ $user->name }}</div>
+                                <svg class="ms-1 fill-current h-4 w-4" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+            @endif
+
+            {{-- Menu button, on phones --}}
+            <div class="-me-2 flex items-center md:hidden">
+                <button x-on:click="open = ! open" :aria-expanded="open" aria-label="{{ __('Menu') }}"
+                        class="inline-flex size-11 items-center justify-center rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                        <path x-show="! open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- The menu on phones --}}
+    <div x-show="open" x-cloak class="md:hidden">
+        <div class="pt-2 pb-3 space-y-1">
+            @foreach ($items as $item)
+                <x-responsive-nav-link :href="route($item->route)" :active="request()->routeIs($item->active)">
+                    {{ $item->label }}
+                </x-responsive-nav-link>
+            @endforeach
+        </div>
+
+        @if ($user)
+            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+                <div class="px-4">
+                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ $user->name }}</div>
+                    <div class="font-medium text-sm text-gray-500">{{ $user->email }}</div>
+                </div>
+
+                <div class="mt-3 space-y-1">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
+                </div>
+            </div>
+        @endif
+    </div>
+</nav>
