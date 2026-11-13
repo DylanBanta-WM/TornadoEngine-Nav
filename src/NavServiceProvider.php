@@ -17,9 +17,6 @@ class NavServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'nav');
 
         $nav->add(__('Dashboard'), 'dashboard', order: 0);
-
-        // Core 0.2 and later have an Administration area.
-        $nav->add(__('Administration'), 'administration', active: 'administration*', order: 1000,
-            visible: fn ($user) => (bool) $user?->is_admin);
+        $nav->user(__('Administration'), 'administration', active: 'administration*', order: 900, can: 'administration');
     }
 }
