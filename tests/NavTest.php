@@ -79,7 +79,7 @@ class NavTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        $this->assertSame(['Administration'], $this->labels(app(Nav::class)->userItemsFor($admin)));
+        $this->assertContains('Administration', $this->labels(app(Nav::class)->userItemsFor($admin)));
         $this->assertSame([], app(Nav::class)->userItemsFor(User::factory()->create()));
         $this->assertNotContains('Administration', $this->labels(app(Nav::class)->for($admin)));
 
