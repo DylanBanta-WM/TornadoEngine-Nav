@@ -93,4 +93,44 @@ class NavTest extends TestCase
 
         $this->assertNotContains('Gone', $this->labels(app(Nav::class)->for(null)));
     }
+
+    public function test_the_dashboard_shows_the_tools_each_person_can_open_in_sections(): void
+    {
+        $this->routes('zz.notes', 'zz.secret', 'zz.attendance');
+        Gate::define('zz.secret', fn (User $user) => $user->email === 'boss@school.test');
+        app(Nav::class)
+            ->tool('Notes', 'zz.notes', 'Write notes.', section: 'Classroom', icon: 'document', color: 'teal')
+            ->tool('Attendance', 'zz.attendance', 'Take attendance.', section: 'Classroom', color: 'not-a-color')
+            ->tool('Secret', 'zz.secret', 'Only for the boss.', section: 'Office', can: 'zz.secret')
+            ->tool('Gone', 'zz.missing', 'No route.');
+
+        $this->actingAs(User::factory()->create())->get('/dashboard')
+            ->assertOk()
+            ->assertSeeInOrder(['Classroom', 'Attendance', 'Take attendance.', 'Notes', 'Write notes.'])
+            ->assertSee('bg-teal-100', false)
+            ->assertDontSee('Secret')
+            ->assertDontSee('Gone');
+
+        $this->actingAs(User::factory()->create(['email' => 'boss@school.test']))->get('/dashboard')->assertSeeInOrder(['Classroom', 'Office', 'Secret']);
+        $this->assertSame(['Attendance', 'Notes'], $this->labels(app(Nav::class)->toolsFor(User::factory()->create())['Classroom']));
+    }
+
+    public function test_people_without_tools_are_told_to_ask_for_access(): void
+    {
+        // Remove every registered tool, so only the empty state is left.
+        $nav = app(Nav::class);
+        foreach (app(Nav::class)->toolsFor(User::factory()->create(['is_admin' => true])) as $tools) {
+            foreach ($tools as $tool) {
+                $nav->remove($tool->route);
+            }
+        }
+
+        $this->actingAs(User::factory()->create())->get('/dashboard')->assertSee('No tools yet');
+    }
+
+    public function test_admins_see_administration_on_the_dashboard(): void
+    {
+        $this->actingAs(User::factory()->create(['is_admin' => true]))->get('/dashboard')->assertSeeInOrder(['Administration', 'Administration', 'Settings, scheduled jobs']);
+        $this->actingAs(User::factory()->create())->get('/dashboard')->assertDontSee('Settings, scheduled jobs');
+    }
 }
