@@ -17,8 +17,9 @@ class NavServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'nav');
 
         $nav->add(__('Dashboard'), 'dashboard', order: 0);
-        $nav->user(__('Administration'), 'administration', active: 'administration*', order: 900, can: 'administration');
-        $nav->user(__('Change password'), 'password.edit', order: 950, visible: fn ($user) => $user !== null && $user->password !== null);
+        // The Administration dropdown: modules add theirs with add(..., group: 'administration').
+        $nav->group('administration', __('Administration'), order: 950);
+        $nav->add(__('Administration'), 'administration', active: 'administration*', order: 10, can: 'administration', group: 'administration');
         $nav->tool(__('Administration'), 'administration', __('Settings, scheduled jobs, updates, and each module\'s setup.'),
             section: __('Administration'), icon: 'cog', color: 'gray', can: 'administration');
     }

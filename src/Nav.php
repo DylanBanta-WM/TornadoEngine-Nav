@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
  *     $nav->add('Notes', 'notes.index', active: 'notes.*', can: 'notes.view');
  *     $nav->group('tools', 'Tools', order: 40);
  *     $nav->add('Inventory', 'inventory.index', group: 'tools');
- *     $nav->user('Administration', 'administration', can: 'administration');
+ *     $nav->add('Users and roles', 'access.users.index', group: 'administration', can: 'access.manage');
+ *     $nav->user('Profile', 'profile');
  *     $nav->tool('Notes', 'notes.index', 'Write and share notes.', section: 'Classroom', icon: Nav::ICONS['document'], can: 'notes.view');
  *
  * An item with "can" only shows to users with that permission. A dropdown only shows if
@@ -140,7 +141,7 @@ class Nav
         $entries = array_values(array_filter($visible, fn (NavItem $item) => $item->group === null || ! isset($this->groups[$item->group])));
 
         foreach ($this->groups as $key => $group) {
-            $items = array_values(array_filter($visible, fn (NavItem $item) => $item->group === $key));
+            $items = $this->sorted(array_values(array_filter($visible, fn (NavItem $item) => $item->group === $key)));
 
             if ($items) {
                 $entries[] = new NavGroup($key, $group['label'], $group['order'], $items);

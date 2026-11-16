@@ -75,16 +75,17 @@ class NavTest extends TestCase
         $this->assertNotContains('Inventory', $this->labels($entries));
     }
 
-    public function test_the_user_menu_has_administration_for_admins_above_log_out(): void
+    public function test_administration_is_a_dropdown_for_admins_only(): void
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        $this->assertContains('Administration', $this->labels(app(Nav::class)->userItemsFor($admin)));
-        $this->assertSame([], app(Nav::class)->userItemsFor(User::factory()->create()));
-        $this->assertNotContains('Administration', $this->labels(app(Nav::class)->for($admin)));
+        $this->assertContains('Administration', $this->labels(app(Nav::class)->for($admin)));
+        $this->assertNotContains('Administration', $this->labels(app(Nav::class)->for(User::factory()->create())));
+        $this->assertNotContains('Administration', $this->labels(app(Nav::class)->userItemsFor($admin)));
 
-        $html = $this->actingAs($admin)->get('/dashboard')->getContent();
-        $this->assertLessThan(strpos($html, 'Log Out'), strpos($html, 'Administration'));
+        // Items in a dropdown are in order too.
+        $group = collect(app(Nav::class)->for($admin))->first(fn ($entry) => $entry instanceof NavGroup && $entry->key === 'administration');
+        $this->assertSame('Administration', $group->items[0]->label);
     }
 
     public function test_items_for_missing_routes_are_left_out(): void
