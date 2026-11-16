@@ -86,6 +86,7 @@ class NavTest extends TestCase
         // Items in a dropdown are in order too.
         $group = collect(app(Nav::class)->for($admin))->first(fn ($entry) => $entry instanceof NavGroup && $entry->key === 'administration');
         $this->assertSame('Administration', $group->items[0]->label);
+        $this->assertSame('Administration', app(Nav::class)->for($admin)[0]->label, 'the dropdown is leftmost');
     }
 
     public function test_items_for_missing_routes_are_left_out(): void
