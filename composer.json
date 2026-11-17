@@ -15,6 +15,7 @@
     "extra": {
         "tornado": {
             "name": "Nav",
+            "prompt": "Menu items and dashboard cards: $nav->add(...) and $nav->tool(...).",
             "core": ">=0.2",
             "core-module": true,
             "provider": "TornadoEngine\\Nav\\NavServiceProvider"
