@@ -24,13 +24,13 @@
                         @if ($entry instanceof \TornadoEngine\Nav\NavGroup)
                             <x-dropdown align="left" width="48">
                                 <x-slot name="trigger">
-                                    <button type="button" class="{{ $tab }} {{ request()->routeIs(...$entry->activePatterns()) ? $tabOn : $tabOff }}">
+                                    <button type="button" data-tour="nav-group-{{ $entry->key }}" class="{{ $tab }} {{ request()->routeIs(...$entry->activePatterns()) ? $tabOn : $tabOff }}">
                                         {{ $entry->label }} {!! $chevron !!}
                                     </button>
                                 </x-slot>
                                 <x-slot name="content">
                                     @foreach ($entry->items as $item)
-                                        <x-dropdown-link :href="route($item->route)">{{ $item->label }}</x-dropdown-link>
+                                        <x-dropdown-link :href="route($item->route)" :data-tour="'nav-item-'.$item->route">{{ $item->label }}</x-dropdown-link>
                                     @endforeach
                                 </x-slot>
                             </x-dropdown>
@@ -69,7 +69,7 @@
 
             {{-- Menu button, on phones --}}
             <div class="-me-2 flex items-center md:hidden">
-                <button type="button" x-on:click="open = ! open" :aria-expanded="open" aria-label="{{ __('Menu') }}"
+                <button type="button" x-on:click="open = ! open" :aria-expanded="open" aria-label="{{ __('Menu') }}" data-tour="menu-button"
                         class="inline-flex size-11 items-center justify-center rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <path x-show="! open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -87,7 +87,7 @@
                 @if ($entry instanceof \TornadoEngine\Nav\NavGroup)
                     <div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ $entry->label }}</div>
                     @foreach ($entry->items as $item)
-                        <x-responsive-nav-link :href="route($item->route)" :active="request()->routeIs($item->active)">
+                        <x-responsive-nav-link :href="route($item->route)" :active="request()->routeIs($item->active)" :data-tour="'nav-mobile-'.$item->route">
                             <span class="ps-3">{{ $item->label }}</span>
                         </x-responsive-nav-link>
                     @endforeach
