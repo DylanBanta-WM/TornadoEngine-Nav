@@ -35,7 +35,7 @@
                                 </x-slot>
                             </x-dropdown>
                         @else
-                            <x-nav-link :href="route($entry->route)" :active="request()->routeIs($entry->active)">
+                            <x-nav-link :href="route($entry->route)" :active="request()->routeIs($entry->active)" :data-tour="'nav-link-'.$entry->route">
                                 {{ $entry->label }}
                             </x-nav-link>
                         @endif
