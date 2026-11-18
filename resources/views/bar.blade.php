@@ -43,8 +43,13 @@
                 </div>
             </div>
 
+            @php($navbarViews = $user && class_exists(\App\Layout\Navbar::class) ? app(\App\Layout\Navbar::class)->views() : [])
             @if ($user)
-                <div class="hidden md:flex md:items-center md:ms-6">
+                <div class="hidden md:flex md:items-center md:gap-2 md:ms-6">
+                    {{-- Modules add to the menu bar with Core's App\Layout\Navbar (a notification bell, say). --}}
+                    @foreach ($navbarViews as $view)
+                        @include($view)
+                    @endforeach
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button type="button" class="inline-flex items-center gap-1 px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -68,7 +73,10 @@
             @endif
 
             {{-- Menu button, on phones --}}
-            <div class="-me-2 flex items-center md:hidden">
+            <div class="-me-2 flex items-center gap-1 md:hidden">
+                @foreach ($navbarViews as $view)
+                    @include($view)
+                @endforeach
                 <button type="button" x-on:click="open = ! open" :aria-expanded="open" aria-label="{{ __('Menu') }}" data-tour="menu-button"
                         class="inline-flex size-11 items-center justify-center rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
