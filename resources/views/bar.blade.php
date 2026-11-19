@@ -14,7 +14,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <a href="{{ route('dashboard') }}" class="shrink-0 flex items-center text-sm font-semibold uppercase tracking-widest text-gray-800 dark:text-gray-200">
+                <a href="{{ route('dashboard') }}" class="shrink-0 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-gray-800 dark:text-gray-200">
+                    {{-- Core's logo (0.29+). --}}
+                    @includeIf('logo', ['class' => 'size-10'])
                     {{ config('app.name') }}
                 </a>
 
