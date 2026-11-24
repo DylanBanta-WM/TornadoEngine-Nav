@@ -19,8 +19,8 @@ class NavServiceProvider extends ServiceProvider
         $nav->add(__('Dashboard'), 'dashboard', order: 0);
         // The Administration dropdown: modules add theirs with add(..., group: 'administration').
         $nav->group('administration', __('Administration'), order: -10);
-        $nav->add(__('Administration'), 'administration', active: 'administration*', order: 10, can: 'administration', group: 'administration');
-        $nav->tool(__('Administration'), 'administration', __('Settings, scheduled jobs, updates, and each module\'s setup.'),
+        $nav->add(__('Settings'), 'administration', active: 'administration*', order: 10, can: 'administration', group: 'administration');
+        $nav->tool(__('Settings'), 'administration', __('Settings, scheduled jobs, updates, and each module\'s setup.'),
             section: __('Administration'), icon: 'cog', color: 'gray', can: 'administration');
     }
 }
